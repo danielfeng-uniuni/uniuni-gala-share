@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>UniUni Lumina Forest Gala – Social Sharing Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f4f4f5;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .app {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border-radius: 20px;
+      border: 1px solid #e5e7eb;
+      padding: 20px 18px 18px;
+      box-shadow: 0 14px 35px rgba(15,23,42,0.08);
+    }
+    .header {
+      margin-bottom: 16px;
+    }
+    .title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .subtitle {
+      font-size: 12px;
+      color: #6b7280;
+    }
+    .platform-switch {
+      display: flex;
+      gap: 8px;
+      padding: 3px;
+      border-radius: 999px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 12px;
+      margin-top: 12px;
+    }
+    .platform-btn {
+      flex: 1;
+      border: none;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      cursor: pointer;
+      background: transparent;
+      color: #6b7280;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .platform-btn span.icon {
+      font-size: 14px;
+    }
+    .platform-btn.active {
+      background: #111827;
+      color: #f9fafb;
+      font-weight: 600;
+    }
+    .hint {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    .captions {
+      max-height: 190px;
+      overflow-y: auto;
+      padding-right: 4px;
+      margin-bottom: 10px;
+    }
+    .captions::-webkit-scrollbar {
+      width: 4px;
+    }
+    .captions::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 999px;
+    }
+    .caption-card {
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      background: #fbfbfb;
+      padding: 9px 10px 7px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: border 0.15s ease, background 0.15s ease, transform 0.08s ease;
+    }
+    .caption-card:hover {
+      border-color: #111827;
+      transform: translateY(-1px);
+    }
+    .caption-card.active {
+      border-color: #111827;
+      background: #f3f4f6;
+    }
+    .caption-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9ca3af;
+      margin-bottom: 3px;
+    }
+    .caption-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #111827;
+    }
+    .selected-block {
+      border-radius: 14px;
+      border: 1px dashed #d1d5db;
+      background: #f9fafb;
+      padding: 9px 10px 7px;
+      margin-bottom: 10px;
+    }
+    .selected-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 3px;
+      gap: 4px;
+    }
+    .selected-label {
+      font-size: 11px;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .selected-platform-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px solid #111827;
+      color: #111827;
+      background: #ffffff;
+      white-space: nowrap;
+    }
+    .selected-text {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #030712;
+      min-height: 34px;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .btn {
+      flex: 1 1 30%;
+      border-radius: 999px;
+      border: 1px solid #111827;
+      padding: 8px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      background: #ffffff;
+      color: #111827;
+    }
+    .btn-primary {
+      background: #111827;
+      color: #f9fafb;
+    }
+    .btn:active {
+      transform: translateY(1px);
+    }
+    .footnote {
+      font-size: 10px;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background: #111827;
+      border-radius: 999px;
+      border: 1px solid #111827;
+      color: #f9fafb;
+      padding: 7px 14px;
+      font-size: 11px;
+      display: none;
+      z-index: 50;
+      box-shadow: 0 12px 30px rgba(15,23,42,0.35);
+    }
+    .toast.show {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    @media (max-width: 480px) {
+      .app {
+        border-radius: 16px;
+        padding: 18px 14px 14px;
+      }
+      .actions {
+        flex-direction: column;
+      }
+      .btn {
+        flex: 1 1 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="header">
+      <div class="title">UniUni Lumina Forest Gala – Social Sharing Hub</div>
+      <div class="subtitle">
+        Choose a caption, copy it with one tap, then jump straight into LinkedIn or Instagram to post.
+      </div>
+    </div>
+
+    <div class="platform-switch">
+      <button class="platform-btn active" data-platform="linkedin">
+        <span class="icon">🔗</span> LinkedIn
+      </button>
+      <button class="platform-btn" data-platform="instagram">
+        <span class="icon">📸</span> Instagram
+      </button>
+    </div>
+
+    <div class="hint">
+      1) Select a platform  ·  2) Tap a caption  ·  3) Copy / Copy & open app, then paste to publish.
+    </div>
+
+    <div class="captions" id="captions-container">
+      <!-- Filled by JS -->
+    </div>
+
+    <div class="selected-block">
+      <div class="selected-label-row">
+        <div class="selected-label">Current Selection</div>
+        <div class="selected-platform-tag" id="selected-platform-tag">LinkedIn</div>
+      </div>
+      <div class="selected-text" id="selected-text">
+        Tap one of the captions above to preview & copy it.
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="copy-btn">
+        ✅ Copy only
+      </button>
+      <button class="btn" id="copy-linkedin-btn">
+        🔗 Copy & open LinkedIn
+      </button>
+      <button class="btn" id="copy-instagram-btn">
+        📸 Copy & open Instagram
+      </button>
+    </div>
+
+    <div class="footnote">
+      Note: For security and privacy reasons, social platforms do not allow websites to auto-fill post content.
+      This page follows best practice: <strong>copy the caption → jump to the posting screen → paste and publish.</strong>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">
+    <span>✅ Caption copied. Paste it into your social post!</span>
+  </div>
+
+  <script>
+    const captionsByPlatform = {
+      linkedin: [
+        "Celebrating growth, innovation, and unity at the UniUni Lumina Forest Gala. Together We Shine, Together We Grow.",
+        "Celebrating a year of growth, gratitude, and glowing brighter together. Every Light Matters at UniUni.",
+        "Honored to be part of a team where every light truly matters.",
+        "Grateful for the opportunity to gather, connect, and celebrate our collective accomplishments. Here’s to shining brighter together in the year ahead."
+      ],
+      instagram: [
+        "From bright ideas to bright moments—the night was full of magic, appreciation, and team spirit. UniUni Moves Forward.",
+        "Glowing into the future with innovation and unity ✨",
+        "UniUni in full glow mode ✨",
+        "Wrapped in lights, laughter, and a whole lot of UniUni pride. Together We Shine, Together We Grow."
+      ]
+    };
+
+    let currentPlatform = "linkedin";
+    let currentText = "";
+
+    const captionsContainer = document.getElementById("captions-container");
+    const selectedTextEl = document.getElementById("selected-text");
+    const selectedPlatformTag = document.getElementById("selected-platform-tag");
+    const toastEl = document.getElementById("toast");
+    const copyBtn = document.getElementById("copy-btn");
+    const copyLinkedInBtn = document.getElementById("copy-linkedin-btn");
+    const copyInstagramBtn = document.getElementById("copy-instagram-btn");
+
+    function renderCaptions() {
+      captionsContainer.innerHTML = "";
+      const list = captionsByPlatform[currentPlatform];
+      list.forEach((text, index) => {
+        const card = document.createElement("div");
+        card.className = "caption-card" + (index === 0 ? " active" : "");
+        card.dataset.text = text;
+
+        const label = document.createElement("div");
+        label.className = "caption-label";
+        label.textContent = (currentPlatform === "linkedin" ? "LinkedIn" : "Instagram") + " Caption " + (index + 1);
+
+        const body = document.createElement("div");
+        body.className = "caption-text";
+        body.textContent = text;
+
+        card.appendChild(label);
+        card.appendChild(body);
+        captionsContainer.appendChild(card);
+
+        card.addEventListener("click", () => {
+          document.querySelectorAll(".caption-card").forEach(c => c.classList.remove("active"));
+          card.classList.add("active");
+          setCurrentText(text);
+        });
+
+        if (index === 0) {
+          setCurrentText(text);
+        }
+      });
+      selectedPlatformTag.textContent = currentPlatform === "linkedin" ? "LinkedIn" : "Instagram";
+      updateActionButtons();
+    }
+
+    function setCurrentText(text) {
+      currentText = text;
+      selectedTextEl.textContent = text;
+    }
+
+    function showToast(message) {
+      toastEl.textContent = message;
+      toastEl.classList.add("show");
+      setTimeout(() => {
+        toastEl.classList.remove("show");
+      }, 1600);
+    }
+
+    function copyCurrentText() {
+      if (!currentText) {
+        showToast("Please select a caption first.");
+        return Promise.reject();
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(currentText).then(() => {
+          showToast("✅ Caption copied. Paste it into your social post!");
+        }).catch(() => {
+          fallbackCopy(currentText);
+        });
+      } else {
+        return fallbackCopy(currentText);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand("copy");
+        showToast("✅ Caption copied. Paste it into your social post!");
+      } catch (e) {
+        showToast("Copy failed. Please select and copy manually.");
+      }
+      document.body.removeChild(textarea);
+      return Promise.resolve();
+    }
+
+    function openLinkedIn() {
+      // Try to open LinkedIn app
+      window.location.href = "linkedin://shareArticle?mini=true&url=https://uniuni.com";
+      // Fallback to LinkedIn web share
+      setTimeout(() => {
+        window.location.href = "https://www.linkedin.com/sharing/share-offsite/?url=https://uniuni.com";
+      }, 800);
+    }
+
+    function openInstagram() {
+      // Try to open Instagram library/publish screen
+      window.location.href = "instagram://library?AssetPath=/";
+    }
+
+    function updateActionButtons() {
+      if (currentPlatform === "linkedin") {
+        copyLinkedInBtn.style.display = "inline-flex";
+        copyInstagramBtn.style.display = "none";
+      } else {
+        copyLinkedInBtn.style.display = "none";
+        copyInstagramBtn.style.display = "inline-flex";
+      }
+    }
+
+    document.querySelectorAll(".platform-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const platform = btn.getAttribute("data-platform");
+        if (platform === currentPlatform) return;
+        currentPlatform = platform;
+        document.querySelectorAll(".platform-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderCaptions();
+      });
+    });
+
+    copyBtn.addEventListener("click", () => {
+      copyCurrentText();
+    });
+
+    copyLinkedInBtn.addEventListener("click", () => {
+      copyCurrentText().then(() => {
+        openLinkedIn();
+      }).catch(() => {});
+    });
+
+    copyInstagramBtn.addEventListener("click", () => {
+      copyCurrentText().then(() => {
+        openInstagram();
+      }).catch(() => {});
+    });
+
+    renderCaptions();
+  </script>
+</body>
+</html>
